@@ -61,10 +61,12 @@ func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 // healthHandler returns the health status of the API
 func healthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(Response{
+	if err := json.NewEncoder(w).Encode(Response{
 		Success: true,
 		Message: "API is running",
-	})
+	}); err != nil {
+		log.Printf("Error encoding health response: %v", err)
+	}
 }
 
 // tutorialsHandler returns a list of tutorials
@@ -108,8 +110,10 @@ func tutorialsHandler(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	json.NewEncoder(w).Encode(Response{
+	if err := json.NewEncoder(w).Encode(Response{
 		Success: true,
 		Data:    tutorials,
-	})
+	}); err != nil {
+		log.Printf("Error encoding tutorials response: %v", err)
+	}
 }
