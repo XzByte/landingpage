@@ -75,10 +75,12 @@ func tutorialsHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != "GET" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		json.NewEncoder(w).Encode(Response{
+		if err := json.NewEncoder(w).Encode(Response{
 			Success: false,
 			Message: "Method not allowed",
-		})
+		}); err != nil {
+			log.Printf("Error encoding error response: %v", err)
+		}
 		return
 	}
 
