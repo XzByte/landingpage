@@ -47,6 +47,14 @@ You can specify a custom port:
 PORT=3001 ./landingpage
 ```
 
+For production, configure CORS by setting the allowed origin:
+
+```bash
+ALLOWED_ORIGIN=https://yourdomain.com ./landingpage
+```
+
+By default, CORS allows all origins (*) for development convenience.
+
 ### Frontend Setup
 
 1. Navigate to the frontend directory:

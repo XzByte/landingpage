@@ -27,7 +27,7 @@ func main() {
 	}
 
 	// Set up routes
-	http.HandleFunc("/api/health", healthHandler)
+	http.HandleFunc("/api/health", corsMiddleware(healthHandler))
 	http.HandleFunc("/api/tutorials", corsMiddleware(tutorialsHandler))
 
 	log.Printf("Server starting on port %s...", port)
@@ -39,7 +39,13 @@ func main() {
 // corsMiddleware adds CORS headers to allow frontend access
 func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
+		// Get allowed origin from environment variable, default to localhost for development
+		allowedOrigin := os.Getenv("ALLOWED_ORIGIN")
+		if allowedOrigin == "" {
+			allowedOrigin = "*"
+		}
+		
+		w.Header().Set("Access-Control-Allow-Origin", allowedOrigin)
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
